@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${titulo}">Recetas del Mundo</title>
+
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">🍳 Recetas del Mundo</div>
+
+
+        <nav>
+            <a th:href="@{/recetas}">Inicio</a>
+            <a th:href="@{/recetas/buscar}">Buscar recetas</a>
+            <a th:href="@{/login}" class="btn-login">
+                Iniciar sesión
+            </a>
+        </nav>
+
+    </header>
+
+    <main>
+
+        <section class="hero">
+            <h1>Descubre sabores de todo el mundo</h1>
+
+            <p>
+                Explora recetas, encuentra nuevas ideas
+                y disfruta preparando tus platos favoritos.
+            </p>
+
+            <a th:href="@{/login}" class="btn-principal">
+                Iniciar sesión para ver recetas
+            </a>
+        </section>
+
+        <section class="contenido">
+
+
+            <h2>🆕 Recetas recientes</h2>
+
+            <div class="grid-recetas">
+                <article class="receta-card"
+                        th:each="receta : ${recientes}">
+
+                    <span class="etiqueta">Nueva receta</span>
+
+                    <h3 th:text="${receta.nombre}">
+                        Nombre de receta
+                    </h3>
+
+                    <a th:href="@{/recetas/{id}(id=${receta.id})}"
+                    class="btn-ver-receta">
+                        Ver receta →
+                    </a>
+
+                </article>
+            </div>
+
+
+
+            <h2>⭐ Recetas populares</h2>
+
+            <div class="grid-recetas">
+                <article class="receta-card"
+                        th:each="receta : ${populares}">
+
+                    <span class="etiqueta">Popular</span>
+
+                    <h3 th:text="${receta.nombre}">
+                        Nombre de receta
+                    </h3>
+
+                    <a th:href="@{/recetas/{id}(id=${receta.id})}"
+                    class="btn-ver-receta">
+                        Ver receta →
+                    </a>
+
+                </article>
+            </div>
+
+
+
+            <section class="banner">
+                <h2>Espacio publicitario</h2>
+                <p>
+                    Descubre productos y marcas para
+                    disfrutar de la cocina.
+                </p>
+            </section>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Recetas del Mundo - ISY2202</p>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Buscar recetas - Recetas del Mundo</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/estilos.css}">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">🍳 Recetas del Mundo</div>
+
+    <nav>
+        <a th:href="@{/recetas}">Inicio</a>
+        <a th:href="@{/recetas/buscar}">Buscar recetas</a>
+        <a th:href="@{/login}" class="btn-login">
+            Iniciar sesión
+        </a>
+    </nav>
+</header>
+
+<main class="contenido">
+
+    <h1>Buscar recetas</h1>
+    <p>
+        Encuentra recetas por nombre, tipo de cocina,
+        ingredientes, país de origen o dificultad.
+    </p>
+
+    <form th:action="@{/recetas/buscar}"
+          method="get"
+          class="form-busqueda">
+
+        <div class="campo">
+            <label for="nombre">Nombre</label>
+            <input id="nombre"
+                   type="text"
+                   name="nombre"
+                   th:value="${nombre}"
+                   placeholder="Ej: Pastel de choclo">
+        </div>
+
+        <div class="campo">
+            <label for="tipoCocina">Tipo de cocina</label>
+            <input id="tipoCocina"
+                   type="text"
+                   name="tipoCocina"
+                   th:value="${tipoCocina}"
+                   placeholder="Ej: Italiana">
+        </div>
+
+        <div class="campo">
+            <label for="ingredientes">Ingredientes</label>
+            <input id="ingredientes"
+                   type="text"
+                   name="ingredientes"
+                   th:value="${ingredientes}"
+                   placeholder="Ej: Queso">
+        </div>
+
+        <div class="campo">
+            <label for="paisOrigen">País de origen</label>
+            <input id="paisOrigen"
+                   type="text"
+                   name="paisOrigen"
+                   th:value="${paisOrigen}"
+                   placeholder="Ej: Chile">
+        </div>
+
+        <div class="campo">
+            <label for="dificultad">Dificultad</label>
+            <select id="dificultad" name="dificultad">
+                <option value="">Todas</option>
+                <option value="Baja"
+                        th:selected="${dificultad == 'Baja'}">Baja</option>
+                <option value="Media"
+                        th:selected="${dificultad == 'Media'}">Media</option>
+                <option value="Alta"
+                        th:selected="${dificultad == 'Alta'}">Alta</option>
+            </select>
+        </div>
+
+        <div class="acciones-busqueda">
+            <button type="submit" class="btn-principal">
+                Buscar recetas
+            </button>
+            <a th:href="@{/recetas/buscar}" class="btn-limpiar">
+                Limpiar
+            </a>
+        </div>
+    </form>
+
+    <section class="resultados">
+        <h2>Resultados de búsqueda</h2>
+
+        <p th:text="|Resultados encontrados: ${#lists.size(resultados)}|">
+            Resultados encontrados: 0
+        </p>
+
+        <p th:if="${#lists.isEmpty(resultados)}">
+            No se encontraron recetas con esos filtros.
+        </p>
+
+        <div class="grid-recetas">
+            <article class="receta-card"
+                     th:each="receta : ${resultados}">
+
+                <h3 th:text="${receta.nombre}">
+                    Nombre de receta
+                </h3>
+
+                <p>
+                    <strong>Tipo:</strong>
+                    <span th:text="${receta.tipoCocina}"></span>
+                </p>
+
+                <p>
+                    <strong>País:</strong>
+                    <span th:text="${receta.paisOrigen}"></span>
+                </p>
+
+                <p>
+                    <strong>Dificultad:</strong>
+                    <span th:text="${receta.dificultad}"></span>
+                </p>
+
+                <p>
+                    <strong>Tiempo:</strong>
+                    <span th:text="|${receta.tiempoCoccionMin} minutos|"></span>
+                </p>
+
+                <a th:href="@{/recetas/{id}(id=${receta.id})}"
+                class="enlace-detalle">
+                    Ver receta →
+                </a>
+
+            </article>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>Recetas del Mundo - ISY2202</p>
+</footer>
+
+</body>
+</html>

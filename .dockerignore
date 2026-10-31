@@ -1,0 +1,9 @@
+
+.env
+.env.*
+.git
+.vscode
+.idea
+target
+evidencias
+*.log

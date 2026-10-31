@@ -1,0 +1,21 @@
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: isy2202-mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: recetas_db
+      MYSQL_USER: recetas_app
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    ports:
+      - "127.0.0.1:3307:3306"
+
+    volumes:
+      - isy2202_mysql_data:/var/lib/mysql
+
+volumes:
+  isy2202_mysql_data:
