@@ -1,6 +1,7 @@
 
 -- ISY2202 - Semana 2
 -- Datos iniciales de recetas
+SET NAMES utf8mb4;
 
 USE recetas_db;
 
