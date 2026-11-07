@@ -45,19 +45,14 @@ public class SecurityConfig {
 
         return email -> {
             var usuario = repositorio.findByEmail(email)
-                    .orElseThrow(() ->
-                        new UsernameNotFoundException(
-                            "Usuario no encontrado"
-                        )
-                    );
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            "Usuario no encontrado"));
 
             return new User(
-                usuario.getEmail(),
-                usuario.getPasswordHash(),
-                java.util.List.of(
-                    new SimpleGrantedAuthority(usuario.getRol())
-                )
-            );
+                    usuario.getEmail(),
+                    usuario.getPasswordHash(),
+                    java.util.List.of(
+                            new SimpleGrantedAuthority(usuario.getRol())));
         };
     }
 
@@ -66,8 +61,7 @@ public class SecurityConfig {
             UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder) {
 
-        var provider =
-            new DaoAuthenticationProvider(userDetailsService);
+        var provider = new DaoAuthenticationProvider(userDetailsService);
 
         provider.setPasswordEncoder(passwordEncoder);
 
@@ -82,8 +76,7 @@ public class SecurityConfig {
 
         if (bytes.length < 32) {
             throw new IllegalArgumentException(
-                "La clave JWT debe tener al menos 32 bytes"
-            );
+                    "La clave JWT debe tener al menos 32 bytes");
         }
 
         return new SecretKeySpec(bytes, "HmacSHA256");
@@ -123,32 +116,24 @@ public class SecurityConfig {
             JwtAuthenticationConverter converter) throws Exception {
 
         http
-            .securityMatcher("/api/**")
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(
-                    SessionCreationPolicy.STATELESS
-                )
-            )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    HttpMethod.POST, "/api/auth/login"
-                ).permitAll()
-                .requestMatchers(
-                    HttpMethod.GET,
-                    "/api/recetas",
-                    "/api/recetas/buscar"
-                ).permitAll()
-                .requestMatchers(
-                    "/api/auth/administrador"
-                ).hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-            .oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwt ->
-                    jwt.jwtAuthenticationConverter(converter)
-                )
-            );
+                .securityMatcher("/api/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                HttpMethod.POST, "/api/auth/login")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/recetas",
+                                "/api/recetas/buscar")
+                        .permitAll()
+                        .requestMatchers(
+                                "/api/auth/administrador")
+                        .hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)));
 
         return http.build();
     }
@@ -159,20 +144,32 @@ public class SecurityConfig {
             HttpSecurity http) throws Exception {
 
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/",
-                    "/recetas",
-                    "/recetas/buscar",
-                    "/css/**",
-                    "/js/**",
-                    "/img/**",
-                    "/error"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(Customizer.withDefaults());
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/",
+                                "/recetas",
+                                "/recetas/buscar",
+                                "/css/**",
+                                "/js/**",
+                                "/img/**",
+                                "/error")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives(
+                                        "default-src 'self'; " +
+                                                "script-src 'self'; " +
+                                                "style-src 'self'; " +
+                                                "img-src 'self' data:; " +
+                                                "font-src 'self' data:; " +
+                                                "object-src 'none'; " +
+                                                "base-uri 'self'; " +
+                                                "frame-ancestors 'none'; " +
+                                                "form-action 'self'")))
+                .formLogin(Customizer.withDefaults());
 
         return http.build();
     }
+
 }
